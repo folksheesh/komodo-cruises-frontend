@@ -1,0 +1,62 @@
+[
+  {
+    "id": "aurora",
+    "name": "Aurora Phinisi",
+    "subtitle": "Private Luxury Phinisi",
+    "coverImage": "https://images.unsplash.com/photo-1526666923127-b2970f64b422?q=80&w=1600&auto=format&fit=crop",
+    "mainPhoto": "https://images.unsplash.com/photo-1533677090275-4a038d52ae5d?q=80&w=1600&auto=format&fit=crop",
+    "capacity": 12,
+    "cabins": [
+      { "type": "Master Suite", "capacity": 2, "price": 8500000, "photo": "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop", "amenities": ["King Bed", "Ensuite", "AC", "Ocean View"] },
+      { "type": "Deluxe Cabin", "capacity": 2, "price": 5500000, "photo": "https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1200&auto=format&fit=crop", "amenities": ["Queen Bed", "Ensuite", "AC"] },
+      { "type": "Twin Cabin", "capacity": 2, "price": 4500000, "photo": "https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=1200&auto=format&fit=crop", "amenities": ["2 Single Bed", "Shared Bathroom", "AC"] }
+    ],
+    "facilities": ["Sun Deck", "Dining Area", "Kayak", "Snorkeling Gear", "Speed Boat"],
+    "gallery": [
+      "https://images.unsplash.com/photo-1559827291-72ee739d0d9a?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "prices": { "3D2N": 14990000, "4D3N": 19990000 },
+    "itinerary": {
+      "3D2N": [
+        "Day 1: Labuan Bajo – Kelor – Manjarite – Kalong",
+        "Day 2: Padar – Pink Beach – Komodo/Manta Point",
+        "Day 3: Taka Makassar – Siaba – Labuan Bajo"
+      ],
+      "4D3N": [
+        "Day 1: Labuan Bajo – Kelor – Menjarite – Kalong",
+        "Day 2: Padar – Komodo – Pink Beach",
+        "Day 3: Manta Point – Taka Makassar – Siaba",
+        "Day 4: Kanawa – Labuan Bajo"
+      ]
+    }
+  },
+  {
+    "id": "mariner",
+    "name": "Mariner Explorer",
+    "subtitle": "Boutique Liveaboard",
+    "coverImage": "https://images.unsplash.com/photo-1493551291186-56bb2765d7ed?q=80&w=1600&auto=format&fit=crop",
+    "mainPhoto": "https://images.unsplash.com/photo-1544551763-7ef420be2b53?q=80&w=1600&auto=format&fit=crop",
+    "capacity": 16,
+    "cabins": [
+      { "type": "Suite", "capacity": 2, "price": 7800000, "photo": "https://images.unsplash.com/photo-1521783988139-893ce0454fb1?q=80&w=1200&auto=format&fit=crop", "amenities": ["King Bed", "Ensuite", "AC"] },
+      { "type": "Superior", "capacity": 2, "price": 5200000, "photo": "https://images.unsplash.com/photo-1549187774-b4e9b0445b06?q=80&w=1200&auto=format&fit=crop", "amenities": ["Queen Bed", "Ensuite", "AC"] }
+    ],
+    "facilities": ["Restaurant", "Camera Station", "Dinghy", "Dive Deck"],
+    "gallery": [
+      "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1512273222628-4daea6e55abb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "prices": { "3D2N": 13990000, "4D3N": 18990000 },
+    "itinerary": {
+      "3D2N": [
+        "Day 1: Labuan Bajo – Kelor – Manjarite – Kalong",
+        "Day 2: Padar – Pink Beach – Komodo/Manta Point",
+        "Day 3: Taka Makassar – Siaba – Labuan Bajo"
+      ]
+    }
+  }
+]

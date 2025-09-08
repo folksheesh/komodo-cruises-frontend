@@ -1,23 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
+import Hero from './components/Hero';
+import Navbar from './components/Navbar';
 
 function App() {
+  // Only show navbar and hero
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-gradient-to-b from-ocean-50 via-white to-ocean-50">
+  <div id="top" />
+  <Navbar />
+      <Hero />
     </div>
   );
 }
