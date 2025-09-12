@@ -41,41 +41,9 @@ export default function SearchResults({ query }) {
 
   return (
     <section id="results" className="max-w-6xl mx-auto px-4 md:px-6 py-10">
-      <div className="flex items-end justify-between flex-wrap gap-3 mb-6">
-        <div>
-          <h3 className="text-2xl md:text-3xl font-semibold text-ocean-900">{items.length} Cruises available</h3>
-          <div className="text-ocean-700 text-sm md:text-base">
-            {destination ? `${destination} • ` : ''}
-            {month
-              ? `Bulan ${new Date(`${month}-01`).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`
-              : `Berangkat ${departDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}`}
-          </div>
-        </div>
-      </div>
+  {/* Heading removed as requested */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((b) => (
-          <article key={b.id} className="rounded-xl overflow-hidden bg-white border border-ocean-100 shadow-card-xl">
-            <div className="aspect-[16/10] bg-ocean-50 overflow-hidden">
-              <img src={b.coverImage} alt={b.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-            </div>
-            <div className="p-4">
-              <div className="text-ocean-900 font-semibold text-lg">{b.name}</div>
-              <div className="text-ocean-700 text-sm">{b.subtitle}</div>
-              <div className="mt-3 flex items-center justify-between">
-                <div className="text-sm text-ocean-700">From</div>
-                <div className="text-ocean-900 font-semibold">{formatIDR(b.fromPrice)}</div>
-              </div>
-              <div className="mt-4 flex items-center justify-between">
-                <div className="text-xs text-ocean-700">
-                  Depart {departDate.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: 'short' })}
-                </div>
-                <button className="px-3 py-2 rounded-lg bg-[#6A3CF4] text-white text-sm hover:brightness-110">View details</button>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+  {/* All cards removed as requested */}
     </section>
   );
 }

@@ -46,7 +46,7 @@ export default function BoatDetail() {
                 ))}
               </select>
             </div>
-            <button className="mt-4 w-full px-4 py-2 rounded-lg bg-[#6A3CF4] text-white hover:brightness-110 disabled:opacity-50" disabled={!picked.date || !picked.cabinType}>Continue</button>
+            <button className="mt-4 w-full px-4 py-2 rounded-lg bg-luxury-accent text-white hover:bg-luxury-accentDark transition disabled:opacity-50" disabled={!picked.date || !picked.cabinType}>Continue</button>
           </div>
         </aside>
       </div>

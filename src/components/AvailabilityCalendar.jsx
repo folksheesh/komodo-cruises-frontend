@@ -20,7 +20,7 @@ export default function AvailabilityCalendar({ boatId, onSelectDate }) {
           <button className="px-3 py-1.5 rounded-lg border border-ocean-200 hover:bg-ocean-50" onClick={() => setMonth((m) => addMonths(m, -1))}>Prev</button>
           <button className="px-3 py-1.5 rounded-lg border border-ocean-200 hover:bg-ocean-50" onClick={() => setMonth((m) => addMonths(m, 1))}>Next</button>
           <button className="px-3 py-1.5 rounded-lg bg-white border border-ocean-200 hover:bg-ocean-50" onClick={() => refetch()} disabled={isFetching}>Reload</button>
-          <button className="px-3 py-1.5 rounded-lg bg-[#6A3CF4] text-white hover:brightness-110" onClick={() => refresh.mutate()} disabled={refresh.isLoading}>Refresh Sheets</button>
+          <button className="px-3 py-1.5 rounded-lg bg-luxury-accent text-white hover:bg-luxury-accentDark transition" onClick={() => refresh.mutate()} disabled={refresh.isLoading}>Refresh Sheets</button>
         </div>
       </div>
       {isLoading ? (

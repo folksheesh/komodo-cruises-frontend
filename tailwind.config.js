@@ -31,11 +31,22 @@ module.exports = {
           800: '#6e470f',
           900: '#583a10',
         },
+        luxury: {
+          forest: '#1f2d26',
+          forestLight: '#2d3d34',
+          mist: '#f5f3ef',
+          sand: '#d9c6b0',
+          sandLight: '#efe3d5',
+          accent: '#c08a5b',
+          accentDark: '#9c6c40',
+          white: '#ffffff'
+        }
       },
       fontFamily: {
-  // Use Poppins for both display and body text
-  display: ['"Poppins"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-  sans: ['"Poppins"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // Body: Poppins, Headings: Playfair Display (serif)
+        display: ['"Playfair Display"', 'serif'],
+        serif: ['"Playfair Display"', 'serif'],
+        sans: ['"Poppins"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'glow-gold': '0 8px 30px rgba(215, 155, 23, 0.35)',
