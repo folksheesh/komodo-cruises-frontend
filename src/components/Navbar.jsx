@@ -22,22 +22,30 @@ export default function Navbar({ onOpenPlan }) {
                         : 'bg-transparent text-white backdrop-blur-[2px]')
                 }>
                     <a href="#top" className="flex items-center gap-2 shrink-0">
-                        <span className="font-display text-xl tracking-tight">Komodo Cruises</span>
+                        <span className="text-xl tracking-tight">Komodo Cruises</span>
                     </a>
                     {/* Middle links removed per request */}
                     <nav className="hidden md:flex items-center justify-center gap-6 text-[15px]" />
-                    <div className="hidden md:flex items-center gap-3 justify-end shrink-0">
+                    <div className="hidden md:flex items-center gap-6 justify-end shrink-0 text-sm">
                         <button
                             type="button"
                             onClick={() => {
                                 const el = document.getElementById('results');
                                 if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                             }}
-                            className="px-5 py-2.5 rounded-full bg-white/70 backdrop-blur text-luxury-forest hover:bg-white transition font-medium"
+                            className={`group inline-flex items-center gap-2 font-medium transition-colors ${scrolled ? 'text-luxury-forest/90 hover:text-luxury-forest' : 'text-white/90 hover:text-white'}`}
+                            style={{background:'transparent', padding:0}}
                         >
-                            Search
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 opacity-80 group-hover:opacity-100"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.35-4.35" /></svg>
+                            <span>Search</span>
                         </button>
-                        <button className="px-5 py-2.5 rounded-full bg-luxury-forest/80 text-luxury-mist hover:bg-luxury-forest transition font-medium tracking-wide">Menu</button>
+                        <button
+                            type="button"
+                            className={`font-medium transition-colors ${scrolled ? 'text-luxury-forest/90 hover:text-luxury-forest' : 'text-white/90 hover:text-white'}`}
+                            style={{background:'transparent', padding:0}}
+                        >
+                            Menu
+                        </button>
                     </div>
                     <button className="md:hidden justify-self-end text-ocean-900" onClick={() => setOpen(v => !v)} aria-label="Toggle menu">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M3 6h18M3 12h18M3 18h18" /></svg>

@@ -17,14 +17,15 @@ export default function Hero({ onOpenPlan }) {
             fetchpriority="high"
           />
         </picture>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+  {/* Subtle overlay to reduce excessive brightness while keeping natural color */}
+  <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/10 via-black/5 to-black/40" />
       </div>
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         <h1 className="font-serif heading-serif text-[2.8rem] md:text-[4.2rem] leading-[1.05] text-luxury-mist drop-shadow-xl mb-6">
-          Place of Miracles
+          Shores of Wonder
         </h1>
         <p className="max-w-2xl mx-auto text-luxury-mist/80 text-base md:text-lg tracking-wide leading-relaxed mb-10">
-          Hadirkan perjalanan laut eksklusif menyusuri keajaiban Kepulauan Komodo dengan kapal pilihan kurasi, layanan privat, dan pengalaman autentik bernuansa alam.
+          Embark on an exclusive voyage through the Komodo Islands with curated vessels, private service, and authentic nature-infused experiences.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <button
