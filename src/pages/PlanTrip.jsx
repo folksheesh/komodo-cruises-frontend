@@ -1,41 +1,28 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "../styles/plan-trip.css";
 
 const regionsData = [
   {
-    country: "South Africa",
-    regions: ["Kruger National Park", "Sabi Sand"],
-  },
-  {
-    country: "Rwanda",
-    regions: ["Volcanoes National Park"],
-  },
-  {
-    country: "Zimbabwe",
-    regions: ["Maliangwe"],
-  },
-  {
-    country: "Tanzania",
-    regions: [],
-  },
+    country: "Nusa Tenggara Timur",
+    regions: ["Komodo National Park", "Labuan Bajo"],
+  }
 ];
 
 const lodgesData = {
-  "Kruger National Park": [
+  "Komodo National Park": [
     "Sweni Lodge",
     "Lebombo Lodge"
   ],
-  "Sabi Sand": [
+  "Labuan Bajo": [
     "Ebony Lodge", 
     "Boulders Lodge",
     "Castleton"
   ],
-  "Volcanoes National Park": [
-    "Kwitonda Lodge"
-  ]
 };
 
 export default function PlanTrip({ onClose }) {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedRegions, setSelectedRegions] = useState([]);
   const [selectedLodges, setSelectedLodges] = useState([]);
@@ -311,17 +298,17 @@ export default function PlanTrip({ onClose }) {
               To see if we have availability for your preferred criteria, please click the button below.
             </p>
             
-            <button className="check-availability-btn">
+            <button className="check-availability-btn" onClick={() => navigate('/results')}>
               Check now <span className="arrow">›</span>
             </button>
 
             <div className="contact-section">
-              <h2 className="contact-title">Speak with a Singita Travel Advisor</h2>
+              <h2 className="contact-title">Speak with a Komodo Cruises Travel Advisor</h2>
               <p className="contact-subtitle">
-                Need some help to plan your trip? Enquire below to contact one of our Singita Travel Advisors.
+                Need some help to plan your trip? Enquire below to contact one of our Komodo Cruises Travel Advisors.
               </p>
               
-              <button className="enquire-btn">
+              <button className="enquire-btn" onClick={() => navigate('/results')}>
                 Enquire now <span className="arrow">›</span>
               </button>
             </div>

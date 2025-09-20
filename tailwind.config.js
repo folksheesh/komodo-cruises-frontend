@@ -37,8 +37,9 @@ module.exports = {
           mist: '#f5f3ef',
           sand: '#d9c6b0',
           sandLight: '#efe3d5',
-          accent: '#c08a5b',
-          accentDark: '#9c6c40',
+          // Accent remapped to footer blue
+          accent: '#223f62',
+          accentDark: '#295c96',
           white: '#ffffff'
         }
       },

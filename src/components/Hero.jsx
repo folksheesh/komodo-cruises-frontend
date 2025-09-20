@@ -21,7 +21,7 @@ export default function Hero({ onOpenPlan }) {
   <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/10 via-black/5 to-black/40" />
       </div>
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <h1 className="font-serif heading-serif text-[2.8rem] md:text-[4.2rem] leading-[1.05] text-luxury-mist drop-shadow-xl mb-6">
+        <h1 className="font-serif heading-serif font-normal text-[3.2rem] md:text-[4.8rem] leading-[1.02] text-luxury-mist drop-shadow-xl mb-6">
           Shores of Wonder
         </h1>
         <p className="max-w-2xl mx-auto text-luxury-mist/80 text-base md:text-lg tracking-wide leading-relaxed mb-10">
@@ -31,7 +31,7 @@ export default function Hero({ onOpenPlan }) {
           <button
             type="button"
             onClick={() => onOpenPlan && onOpenPlan()}
-            className="px-8 py-3 rounded-full bg-luxury-accent text-white font-medium tracking-wide shadow-[0_8px_30px_-5px_rgba(192,138,91,.5)] hover:bg-luxury-accentDark transition"
+            className="font-serif text-white text-xl md:text-2xl underline underline-offset-4 decoration-white hover:opacity-90 transition mt-3"
           >
             Plan your trip
           </button>
