@@ -1,0 +1,9 @@
+/* Home page styles only */
+.hero-section { position: relative; width: 100vw; min-height: 100vh; min-height: 100svh; min-height: 100dvh; display: grid; place-items: center; text-align:center; color:#fff;
+	background: url('/src/images/komodo.jpg') center/cover no-repeat fixed; }
+.hero-section::before { content:""; position:absolute; inset:0; background: linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.45)); }
+.hero-section > div { position: relative; z-index:1; }
+.hero-title { font-family: var(--font-serif); font-size: clamp(2.75rem, 6vw, 4.25rem); margin-bottom: 1rem; font-weight: 600; }
+.hero-sub { color: rgba(255,255,255,.9); max-width: 56rem; margin: 0 auto 1.25rem; line-height: 1.6; font-weight: 500; }
+.hero-cta { font-family: var(--font-serif); font-size: clamp(1.25rem, 3vw, 1.5rem); text-decoration: underline; text-underline-offset: 4px; color:#fff; background:none; border:none; cursor:pointer; font-weight: 600; }
+.hero-cta:hover{ opacity:.9 }
