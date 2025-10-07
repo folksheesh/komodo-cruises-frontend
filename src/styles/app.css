@@ -1,5 +1,6 @@
 /* Simple, framework-free CSS equivalents for easy editing */
 :root {
+  --grey: #cdcdcd;
   --ocean-50: #f2f8fc;
   --ocean-70a: rgba(34,63,98,0.7);
   --ocean-80a: rgba(34,63,98,0.8);
@@ -11,11 +12,15 @@
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-serif: Spectral, ui-serif, Georgia, serif;
   --edge-pad: 30px; /* consistent small gutter from viewport edges */
+  --bg-primary: #f4f1ec; /* Main background color */
 }
 
 /* Base typography */
-html, body { margin: 0; font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ocean-900); overflow-x: hidden; }
+html, body { margin: 0; font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ocean-900); overflow-x: hidden; background: var(--bg-primary); }
 * { box-sizing: border-box; }
+
+/* Global page background */
+#app, .app-container, main { background: var(--bg-primary); min-height: 100vh; }
 
 /* Layout helpers */
 .container { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
@@ -24,9 +29,19 @@ html, body { margin: 0; font-family: var(--font-sans); font-size: 14px; font-wei
 .text-sm { font-size: 0.875rem; }
 
 /* Navbar */
-.nav-container { background: transparent; backdrop-filter: none; border-bottom: none; }
+.nav-container { background: var(--bg-primary); backdrop-filter: none; border-bottom: none; }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem var(--edge-pad); }
-.nav-overlay { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
+.nav-overlay { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--bg-primary); }
+
+/* Home page navigation - transparent */
+body:has(.hero-section) .nav-container,
+body:has(.hero-section) .nav-overlay,
+.home-nav .nav-container,
+.home-nav .nav-overlay,
+.hero-section ~ * .nav-container,
+.hero-section ~ * .nav-overlay {
+  background: transparent !important;
+}
 
 .plan-container { max-width: 980px; margin: 0 auto; padding: 1rem var(--edge-pad); }
 
@@ -90,14 +105,22 @@ html, body { margin: 0; font-family: var(--font-sans); font-size: 14px; font-wei
   margin-left: 1.5rem;
 }
 /* Home nav theme: turn nav to white on hero */
+body:has(.hero-section) .nav-search,
+body:has(.hero-section) .nav-label, 
+body:has(.hero-section) .nav-menu,
+body:has(.hero-section) .nav-right,
+body:has(.hero-section) .brand-text,
+body:has(.hero-section) .brand-chip,
+body:has(.hero-section) .btn-plan,
 .home-nav .nav-search,
 .home-nav .nav-label,
-.home-nav .nav-menu {
-  color: rgba(255,255,255,.95);
+.home-nav .nav-menu,
+.home-nav .nav-right,
+.home-nav .brand-text,
+.home-nav .brand-chip,
+.home-nav .btn-plan {
+  color: rgba(255,255,255,.95) !important;
 }
-
-/* Home nav theme */
-.home-nav .nav-right, .home-nav .nav-label, .home-nav .nav-menu, .home-nav .nav-search { color: rgba(255,255,255,.95); }
 .brand-chip {
   color: #fff;
   font-size: large;

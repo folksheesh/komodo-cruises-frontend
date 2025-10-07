@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Komodo API Test</h1>
+    <div id="output"></div>
+    
+    <script type="module">
+        // Test the API directly
+        const BASE_URL = "https://script.google.com/macros/s/AKfycbwvfIHPdbGq7cVlbX6g1IPoBdE2xIqYD9fZJclMlq9AYAFGa--e3eGV15HbYfrj2z4vLw/exec";
+        
+        async function testAPI() {
+            const output = document.getElementById('output');
+            
+            try {
+                output.innerHTML = '<p>Testing getCabins...</p>';
+                
+                // Test getCabins
+                const cabinsUrl = `${BASE_URL}?resource=cabins`;
+                const cabinsResponse = await fetch(cabinsUrl);
+                const cabinsData = await cabinsResponse.json();
+                
+                output.innerHTML += `<h3>Cabins Data:</h3><pre>${JSON.stringify(cabinsData, null, 2)}</pre>`;
+                
+                // Test getAvailability
+                output.innerHTML += '<p>Testing getAvailability...</p>';
+                const availUrl = `${BASE_URL}?resource=availability&date=2025-10-15`;
+                const availResponse = await fetch(availUrl);
+                const availData = await availResponse.json();
+                
+                output.innerHTML += `<h3>Availability Data:</h3><pre>${JSON.stringify(availData, null, 2)}</pre>`;
+                
+            } catch (error) {
+                output.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+        
+        testAPI();
+    </script>
+</body>
+</html>
