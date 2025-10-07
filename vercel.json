@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npx vite build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm ci --only=production=false",
+  "installCommand": "npm install",
   "framework": null,
   "routes": [
     {
@@ -10,7 +10,6 @@
       "dest": "/index.html"
     }
   ],
-  "functions": {},
   "headers": [
     {
       "source": "/assets/(.*)",
