@@ -10,57 +10,48 @@
         <button class="step" :class="{ 'step-active': step===5 }" @click="go(5)" :disabled="!canGoStep4">Step 5</button>
       </div>
 
-      <!-- Loading / Error -->
-      <div v-if="loading" class="muted" style="margin:1rem 0">Loading data…</div>
-      <div v-if="error" class="text-red-600" style="margin:1rem 0">{{ error }}</div>
-
       <!-- Step 1: Regions -->
       <div v-if="step===1">
-        <h3 class="step-title">Regions</h3>
-        <p class="results-note">Select the regions you're interested in:</p>
+        <h3 class="step-title">Destinations</h3>
+        <p class="results-note">Region: <span class="semibold">Nusa Tenggara Timur</span></p>
+        <p class="results-note">Select a destination you're interested in:</p>
 
-        <div class="list" v-if="regions.length">
+        <div class="list">
           <div class="list-heading">Nusa Tenggara Timur</div>
 
-          <div class="list-row" v-for="r in regions" :key="r">
-            <div class="list-text">{{ r }}</div>
+          <div class="list-row" v-for="d in DESTINATIONS" :key="d">
+            <div class="list-text">{{ d }}</div>
             <input
               class="radio"
               type="radio"
-              name="region"
-              :value="r"
-              v-model="region"
-              :aria-label="`Region ${r}`"
+              name="destination"
+              :value="d"
+              v-model="destination"
+              :aria-label="`Destination ${d}`"
             />
           </div>
         </div>
-
-        <div v-else class="muted">No regions available.</div>
       </div>
 
-      <!-- Step 2: Cabins -->
+      <!-- Step 2: Ships -->
       <div v-else-if="step===2">
-        <h3 class="step-title">Cabins</h3>
-        <p class="results-note">These cabins are available in the region you've selected.</p>
-        <p class="results-note">Please select the ones you're interested in:</p>
+        <h3 class="step-title">Ships</h3>
+        <p class="results-note">Please select a ship:</p>
 
-        <div class="list" v-if="cabinsForRegion.length">
-          <div class="list-heading">{{ region }}</div>
+        <div class="list">
+          <div class="list-heading">Available Ships</div>
 
-          <div class="list-row" v-for="c in cabinsForRegion" :key="c">
-            <div class="list-text">{{ c }}</div>
+          <div class="list-row" v-for="s in SHIPS" :key="s">
+            <div class="list-text">{{ s }}</div>
             <input
               class="radio"
-              type="checkbox"
-              :value="c"
-              v-model="lodges"
-              :aria-label="`Cabin ${c}`"
+              type="radio"
+              name="ship"
+              :value="s"
+              v-model="ship"
+              :aria-label="`Ship ${s}`"
             />
           </div>
-        </div>
-
-        <div v-else class="muted">
-          No cabins found for <span class="semibold">{{ region }}</span>.
         </div>
       </div>
 
@@ -200,14 +191,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { getCabins } from '../services/komodoApi'
+import { ref, computed, watch } from 'vue'
 import '../styles/pages/plan.css'
 
 /** ===== State ===== */
 const step = ref(1)
-const region = ref('')
-const lodges = ref([]) // Multi-select cabins
+const REGION_NAME = 'Nusa Tenggara Timur'
+const DESTINATIONS = ['Pulau Komodo', 'Labuan Bajo']
+const SHIPS = [] // Data kapal diambil dari API, bukan hardcoded
+
+const destination = ref('')
+const ship = ref('')
 
 const dateFrom = ref('')
 const dateTo = ref('') // Keep for compatibility but not used in UI
@@ -220,24 +214,7 @@ const age0_2 = ref(0)
 const currentMonth = ref(new Date().getMonth())
 const currentYear = ref(new Date().getFullYear())
 
-const loading = ref(false)
-const error = ref('')
-
-/** API Data */
-const cabinsData = ref(null)
-
-/** ===== Derived ===== */
-const regions = computed(() => 
-  cabinsData.value?.operators.map(op => op.operator) || []
-)
-
-const cabinsForRegion = computed(() => {
-  if (!region.value || !cabinsData.value) return []
-  const operator = cabinsData.value.operators.find(op => op.operator === region.value)
-  return operator?.cabins || []
-})
-
-const labels = ['Regions', 'Cabins', 'Dates', 'Guests', 'Submit']
+const labels = ['Destinations', 'Ships', 'Dates', 'Guests', 'Submit']
 const prevLabel = computed(() => labels[step.value - 2] || '')
 const nextLabel = computed(() => step.value < 5 ? (labels[step.value - 1] + ' ›') : 'Submit ›')
 
@@ -291,18 +268,14 @@ const calendarDays = computed(() => {
 })
 
 /** Guards untuk step navigation */
-const canGoStep2 = computed(() => !!region.value)
-const canGoStep3 = computed(() => !!region.value && lodges.value.length > 0)
-const canGoStep4 = computed(() => !!region.value && lodges.value.length > 0 && !!dateFrom.value)
+const canGoStep2 = computed(() => !!destination.value)
+const canGoStep3 = computed(() => !!destination.value && !!ship.value)
+const canGoStep4 = computed(() => !!destination.value && !!ship.value && !!dateFrom.value)
 
 /** ===== Effects ===== */
-onMounted(async () => {
-  await fetchCabins()
-})
-
-watch(region, () => {
-  // reset cabins saat ganti region
-  lodges.value = []
+watch(destination, () => {
+  // reset ship saat ganti destinasi
+  ship.value = ''
 })
 
 /** ===== Actions ===== */
@@ -310,8 +283,8 @@ function go(n) { step.value = n }
 
 function next() {
   // guard ringan biar UX jelas
-  if (step.value === 1 && !region.value) return toast('Please select a region first.')
-  if (step.value === 2 && lodges.value.length === 0) return toast('Please select at least one cabin first.')
+  if (step.value === 1 && !destination.value) return toast('Please select a destination first.')
+  if (step.value === 2 && !ship.value) return toast('Please select a ship first.')
   if (step.value === 3 && !dateFrom.value) return toast('Please select a start date first.')
   if (step.value < 5) step.value++
   else goResults()
@@ -322,8 +295,10 @@ function prev() { if (step.value > 1) step.value-- }
 function goResults() { 
   // Save search criteria to localStorage for Results page
   const searchCriteria = {
-    region: region.value,
-    lodges: lodges.value,
+    region: REGION_NAME,
+    destination: destination.value,
+    ship: ship.value,
+    lodges: ship.value ? [ship.value] : [],
     dateFrom: dateFrom.value,
     dateTo: dateTo.value,
     adults: adults.value,
@@ -386,22 +361,5 @@ function selectDate(day) {
   }
 }
 
-/** ===== API call ===== */
-async function fetchCabins() {
-  loading.value = true
-  error.value = ''
-  try {
-    const data = await getCabins()
-    cabinsData.value = data
-
-    // auto-pick region kalau cuma ada satu
-    if (!region.value && data.operators.length === 1) {
-      region.value = data.operators[0].operator
-    }
-  } catch (e) {
-    error.value = `Failed to load cabins: ${e instanceof Error ? e.message : String(e)}`
-  } finally {
-    loading.value = false
-  }
-}
+// No API calls needed; using static lists above.
 </script>

@@ -1,11 +1,14 @@
 <template>
   <teleport to="body">
-    <div v-if="isOpen" class="modal-overlay">
-      <div class="modal-container">
+    <transition name="modal-fade">
+      <div v-if="isOpen" class="modal-overlay">
+        <div class="modal-container">
         <!-- Modal Header with Close -->
         <div class="modal-header">
-          <h2 class="modal-title">Plan your trip</h2>
-          <button class="modal-close" @click="closeModal">✕</button>
+          <div class="modal-header-content">
+            <h2 class="modal-title">Plan your trip</h2>
+            <button class="modal-close" @click="closeModal">Close ✕</button>
+          </div>
         </div>
 
         <!-- Plan Content (same as Plan.vue) -->
@@ -14,85 +17,70 @@
             <div class="plan-content">
               <!-- Steps Header -->
               <div class="steps" role="tablist" aria-label="Plan steps">
-                <button class="step" :class="{ 'step-active': step===1 }" @click="go(1)">Step 1</button>
-                <button class="step" :class="{ 'step-active': step===2 }" @click="go(2)" :disabled="!canGoStep2">Step 2</button>
-                <button class="step" :class="{ 'step-active': step===3 }" @click="go(3)" :disabled="!canGoStep3">Step 3</button>
-                <button class="step" :class="{ 'step-active': step===4 }" @click="go(4)" :disabled="!canGoStep4">Step 4</button>
-                <button class="step" :class="{ 'step-active': step===5 }" @click="go(5)" :disabled="!canGoStep4">Step 5</button>
+                <button class="step" :class="{ 'step-active': step === 1 }" @click="go(1)">Step 1</button>
+                <button class="step" :class="{ 'step-active': step === 2 }" @click="go(2)" :disabled="!canGoStep2">Step
+                  2</button>
+                <button class="step" :class="{ 'step-active': step === 3 }" @click="go(3)" :disabled="!canGoStep3">Step
+                  3</button>
+                <button class="step" :class="{ 'step-active': step === 4 }" @click="go(4)" :disabled="!canGoStep4">Step
+                  4</button>
+                <button class="step" :class="{ 'step-active': step === 5 }" @click="go(5)" :disabled="!canGoStep4">Step
+                  5</button>
               </div>
 
-              <!-- Loading / Error -->
-              <div v-if="loading" class="muted" style="margin:1rem 0">Loading data…</div>
-              <div v-if="error" class="text-red-600" style="margin:1rem 0">{{ error }}</div>
+              <!-- Step 1: Regions (multi select) -->
+              <div v-if="step === 1">
+                <h3 class="step-title">Destinations</h3>
+                <p class="results-note">Select the destinations you're interested in:</p>
 
-              <!-- Step 1: Regions -->
-              <div v-if="step===1">
-                <h3 class="step-title">Regions</h3>
-                <p class="results-note">Select the regions you're interested in:</p>
-
-                <div class="list" v-if="regions.length">
+                <div class="list">
                   <div class="list-heading">Nusa Tenggara Timur</div>
 
-                  <div class="list-row" v-for="r in regions" :key="r">
-                    <div class="list-text">{{ r }}</div>
-                    <input
-                      class="radio"
-                      type="radio"
-                      name="region"
-                      :value="r"
-                      v-model="region"
-                      :aria-label="`Region ${r}`"
-                    />
+                  <div class="list-row" v-for="d in DESTINATIONS" :key="d">
+                    <div class="list-text">{{ d }}</div>
+                    <input class="check" type="checkbox" :value="d" v-model="selectedDestinations"
+                      :aria-label="`Destination ${d}`" />
                   </div>
                 </div>
-
-                <div v-else class="muted">No regions available.</div>
               </div>
 
-              <!-- Step 2: Cabins -->
-              <div v-else-if="step===2">
-                <h3 class="step-title">Cabins</h3>
-                <p class="results-note">These cabins are available in the region you've selected.</p>
-                <p class="results-note">Please select the ones you're interested in:</p>
+              <!-- Step 2: Ships -->
+              <div v-else-if="step === 2">
+                <h3 class="step-title">Ships</h3>
+                <p class="results-note">Please select one or more ships:</p>
 
-                <div class="list" v-if="cabinsForRegion.length">
-                  <div class="list-heading">{{ region }}</div>
+                <div class="list">
+                  <div class="list-heading">Available Ships</div>
 
-                  <div class="list-row" v-for="c in cabinsForRegion" :key="c">
-                    <div class="list-text">{{ c }}</div>
-                    <input
-                      class="radio"
-                      type="checkbox"
-                      :value="c"
-                      v-model="lodges"
-                      :aria-label="`Cabin ${c}`"
-                    />
+                  <div v-if="shipsLoading" class="muted">Loading ships...</div>
+                  <template v-else>
+                  <div class="list-row" v-for="s in shipsList" :key="s.id">
+                    <div class="list-text">{{ s.label }}</div>
+                    <input class="check" type="checkbox" :value="s.id" v-model="selectedShipIds" :aria-label="`Ship ${s.label}`" />
                   </div>
-                </div>
-
-                <div v-else class="muted">
-                  No cabins found for <span class="semibold">{{ region }}</span>.
+                    <div v-if="shipsList.length === 0" class="muted">No ships found from API.</div>
+                  </template>
                 </div>
               </div>
 
               <!-- Step 3: Dates -->
-              <div v-else-if="step===3">
+              <div v-else-if="step === 3">
                 <h3 class="step-title">Dates</h3>
                 <p class="results-note">Select the start date for your trip:</p>
                 <p class="results-note text-sm">Trips start only on Mondays and Fridays.</p>
-                
+
                 <div class="date-input-section">
                   <label class="date-label">Start Date:</label>
-                  <input type="date" class="input date-input" v-model="dateFrom" :min="minDate"/>
+                  <input type="text" disabled class="input date-input" v-model="dateFrom" :min="minDate" />
                 </div>
-                
+
                 <div class="custom-calendar">
                   <div class="calendar-header">
                     <button class="calendar-nav" @click="prevMonth" type="button">‹</button>
                     <h4 class="calendar-title">{{ currentMonthYear }}</h4>
                     <button class="calendar-nav" @click="nextMonth" type="button">›</button>
                   </div>
-                  
+
                   <div class="calendar-grid">
                     <div class="calendar-weekdays">
                       <div class="weekday">Su</div>
@@ -103,23 +91,15 @@
                       <div class="weekday">Fr</div>
                       <div class="weekday">Sa</div>
                     </div>
-                    
+
                     <div class="calendar-days">
-                      <button 
-                        v-for="day in calendarDays" 
-                        :key="day.key"
-                        class="calendar-day"
-                        :class="{
-                          'other-month': !day.isCurrentMonth,
-                          'selected': day.isSelected,
-                          'disabled': !day.isSelectable,
-                          'monday': day.isMonday,
-                          'friday': day.isFriday
-                        }"
-                        :disabled="!day.isSelectable"
-                        @click="selectDate(day)"
-                        type="button"
-                      >
+                      <button v-for="day in calendarDays" :key="day.key" class="calendar-day" :class="{
+                        'other-month': !day.isCurrentMonth,
+                        'selected': day.isSelected,
+                        'disabled': !day.isSelectable,
+                        'monday': day.isMonday,
+                        'friday': day.isFriday
+                      }" :disabled="!day.isSelectable" @click="selectDate(day)" type="button">
                         {{ day.date }}
                       </button>
                     </div>
@@ -128,7 +108,7 @@
               </div>
 
               <!-- Step 4: Guests -->
-              <div v-else-if="step===4">
+              <div v-else-if="step === 4">
                 <h3 class="step-title">Guests</h3>
                 <p class="results-note">Please indicate how many adults will need to be accommodated.</p>
                 <p class="results-note">If your booking includes children, please enquire directly on the next step.</p>
@@ -136,7 +116,10 @@
 
                 <div class="counters">
                   <div class="counter-row">
-                    <div class="counter-text"><div class="semibold">Adults</div><div class="muted text-sm">Ages 17+</div></div>
+                    <div class="counter-text">
+                      <div class="semibold">Adults</div>
+                      <div class="muted text-sm">Ages 17+</div>
+                    </div>
                     <div class="counter-ctrls">
                       <button type="button" class="btn-icon" @click="dec('adults')">−</button>
                       <span class="count">{{ adults }}</span>
@@ -145,7 +128,10 @@
                   </div>
 
                   <div class="counter-row">
-                    <div class="counter-text"><div class="semibold">Children</div><div class="muted text-sm">Ages 10 - 16</div></div>
+                    <div class="counter-text">
+                      <div class="semibold">Children</div>
+                      <div class="muted text-sm">Ages 10 - 16</div>
+                    </div>
                     <div class="counter-ctrls">
                       <button type="button" class="btn-icon" @click="dec('children')">−</button>
                       <span class="count">{{ children }}</span>
@@ -154,7 +140,9 @@
                   </div>
 
                   <div class="counter-row">
-                    <div class="counter-text"><div class="semibold">Ages 3 - 9</div></div>
+                    <div class="counter-text">
+                      <div class="semibold">Ages 3 - 9</div>
+                    </div>
                     <div class="counter-ctrls">
                       <button type="button" class="btn-icon" @click="dec('age3_9')">−</button>
                       <span class="count">{{ age3_9 }}</span>
@@ -163,7 +151,9 @@
                   </div>
 
                   <div class="counter-row">
-                    <div class="counter-text"><div class="semibold">Ages 0 - 2</div></div>
+                    <div class="counter-text">
+                      <div class="semibold">Ages 0 - 2</div>
+                    </div>
                     <div class="counter-ctrls">
                       <button type="button" class="btn-icon" @click="dec('age0_2')">−</button>
                       <span class="count">{{ age0_2 }}</span>
@@ -197,7 +187,7 @@
               <!-- Bottom bar navigation -->
               <div class="bottom-bar">
                 <div class="nav-inner" style="display:flex; align-items:center; justify-content:space-between;">
-                  <button class="link-muted" v-if="step>1" @click="prev">‹ {{ prevLabel }}</button>
+                  <button class="link-muted" v-if="step > 1" @click="prev">‹ {{ prevLabel }}</button>
                   <span v-else></span>
                   <button class="btn-primary" @click="next">{{ nextLabel }}</button>
                 </div>
@@ -206,13 +196,15 @@
           </section>
         </div>
       </div>
-    </div>
+      </div>
+    </transition>
   </teleport>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, defineProps, defineEmits } from 'vue'
-import { getCabins } from '../services/komodoApi'
+import { ref, computed, watch, onMounted, onUnmounted, defineProps, defineEmits } from 'vue'
+import { getOperators } from '../services/komodoApi'
+import { formatDateToString, addDaysToDateString, getTodayString } from '../utils/dateUtils'
 import '../styles/pages/plan.css'
 
 const props = defineProps({
@@ -223,8 +215,20 @@ const emit = defineEmits(['close', 'navigate-to-results'])
 
 /** ===== State ===== */
 const step = ref(1)
-const region = ref('')
-const lodges = ref([]) // Multi-select cabins
+// Fixed region label and static options
+const REGION_NAME = 'Nusa Tenggara Timur'
+const DESTINATIONS = ['Komodo National Park', 'Labuan Bajo']
+// Configured ships: display label + sheet name used by API
+const SHIPS_CONFIG = [] // Data kapal diambil dari API, bukan hardcoded
+
+// Ships loaded from API sheets (validated list of {label, sheet})
+const shipsList = ref([])
+const shipsLoading = ref(false)
+
+// Multiple destinations selection
+const selectedDestinations = ref([])
+// Selected ship sheets (array of sheet names)
+const selectedShipIds = ref([])
 
 const dateFrom = ref('')
 const dateTo = ref('') // Keep for compatibility but not used in UI
@@ -237,32 +241,12 @@ const age0_2 = ref(0)
 const currentMonth = ref(new Date().getMonth())
 const currentYear = ref(new Date().getFullYear())
 
-const loading = ref(false)
-const error = ref('')
-
-/** API Data */
-const cabinsData = ref(null)
-
-/** ===== Derived ===== */
-const regions = computed(() => 
-  cabinsData.value?.operators.map(op => op.operator) || []
-)
-
-const cabinsForRegion = computed(() => {
-  if (!region.value || !cabinsData.value) return []
-  const operator = cabinsData.value.operators.find(op => op.operator === region.value)
-  return operator?.cabins || []
-})
-
-const labels = ['Regions', 'Cabins', 'Dates', 'Guests', 'Submit']
+const labels = ['Destinations', 'Ships', 'Dates', 'Guests', 'Submit']
 const prevLabel = computed(() => labels[step.value - 2] || '')
 const nextLabel = computed(() => step.value < 5 ? (labels[step.value - 1] + ' ›') : 'Submit ›')
 
 /** Calendar computed properties */
-const minDate = computed(() => {
-  const today = new Date()
-  return today.toISOString().split('T')[0]
-})
+const minDate = computed(() => getTodayString())
 
 const currentMonthYear = computed(() => {
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -275,23 +259,24 @@ const calendarDays = computed(() => {
   const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0)
   const startDate = new Date(firstDay)
   const today = new Date()
-  
+
   // Start from Sunday of the week containing the 1st
   startDate.setDate(startDate.getDate() - startDate.getDay())
-  
+
   const days = []
   const endDate = new Date(lastDay)
   endDate.setDate(endDate.getDate() + (6 - lastDay.getDay()))
-  
+
   for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
     const dayOfWeek = date.getDay() // 0 = Sunday, 1 = Monday, 5 = Friday
     const isCurrentMonth = date.getMonth() === currentMonth.value
-    const isSelectable = isCurrentMonth && 
-                        date >= today && 
-                        (dayOfWeek === 1 || dayOfWeek === 5) // Monday or Friday only
-    
-    const dateString = date.toISOString().split('T')[0]
-    
+    const isSelectable = isCurrentMonth &&
+      date >= today &&
+      (dayOfWeek === 1 || dayOfWeek === 5) // Monday or Friday only
+
+    // Use utility function for consistent date formatting
+    const dateString = formatDateToString(date)
+
     days.push({
       key: date.getTime(),
       date: date.getDate(),
@@ -303,23 +288,44 @@ const calendarDays = computed(() => {
       isFriday: dayOfWeek === 5
     })
   }
-  
+
   return days
 })
 
 /** Guards untuk step navigation */
-const canGoStep2 = computed(() => !!region.value)
-const canGoStep3 = computed(() => !!region.value && lodges.value.length > 0)
-const canGoStep4 = computed(() => !!region.value && lodges.value.length > 0 && !!dateFrom.value)
+const canGoStep2 = computed(() => selectedDestinations.value.length > 0)
+const canGoStep3 = computed(() => selectedDestinations.value.length > 0 && selectedShipIds.value.length > 0)
+const canGoStep4 = computed(() => selectedDestinations.value.length > 0 && selectedShipIds.value.length > 0 && !!dateFrom.value)
 
 /** ===== Effects ===== */
-onMounted(async () => {
-  await fetchCabins()
+watch(selectedDestinations, () => {
+  // reset ship saat ganti destinasi
+  selectedShipIds.value = []
 })
 
-watch(region, () => {
-  // reset cabins saat ganti region
-  lodges.value = []
+// Watch modal open/close untuk handle body scrollbar
+const originalScrollStyles = {
+  bodyOverflow: '',
+  htmlOverflow: '',
+  bodyPadding: '',
+  htmlPadding: ''
+}
+
+watch(() => props.isOpen, (isOpen) => {
+  if (isOpen) {
+    lockPageScroll()
+  } else {
+    restorePageScroll()
+  }
+}, { immediate: true })
+
+onMounted(() => {
+  loadShips()
+})
+
+// Cleanup: pastikan scrollbar kembali saat component unmount
+onUnmounted(() => {
+  restorePageScroll()
 })
 
 /** ===== Actions ===== */
@@ -331,8 +337,8 @@ function go(n) { step.value = n }
 
 function next() {
   // guard ringan biar UX jelas
-  if (step.value === 1 && !region.value) return toast('Please select a region first.')
-  if (step.value === 2 && lodges.value.length === 0) return toast('Please select at least one cabin first.')
+  if (step.value === 1 && selectedDestinations.value.length === 0) return toast('Please select at least one destination first.')
+  if (step.value === 2 && selectedShipIds.value.length === 0) return toast('Please select at least one ship first.')
   if (step.value === 3 && !dateFrom.value) return toast('Please select a start date first.')
   if (step.value < 5) step.value++
   else goResults()
@@ -348,11 +354,22 @@ function enquireNow() {
   goResults()
 }
 
-function goResults() { 
+function goResults() {
   // Save search criteria to localStorage for Results page
+  // Map selected sheets back to labels for display
+  const selectedEntries = shipsList.value.filter(s => selectedShipIds.value.includes(s.id))
+  const selectedLabels = selectedEntries.map(s => s.label)
+  const selectedSheets = selectedEntries.map(s => s.sheet)
+
   const searchCriteria = {
-    region: region.value,
-    lodges: lodges.value,
+    region: REGION_NAME,
+    destination: selectedDestinations.value[0] || '', // backward-compat single
+    destinations: selectedDestinations.value.slice(),
+    ships: selectedLabels, // display labels
+    shipSheets: selectedSheets,
+    // backward-compat
+    ship: selectedLabels[0] || '',
+    lodges: selectedLabels.slice(),
     dateFrom: dateFrom.value,
     dateTo: dateTo.value,
     adults: adults.value,
@@ -362,9 +379,76 @@ function goResults() {
     totalGuests: adults.value + children.value + age3_9.value + age0_2.value,
     timestamp: Date.now()
   }
-  
+
   localStorage.setItem('komodo_search_criteria', JSON.stringify(searchCriteria))
   emit('navigate-to-results')
+}
+
+async function loadShips() {
+  shipsLoading.value = true
+  try {
+    const res = await getOperators()
+    const normalized = (res.operators || []).map(op => {
+      const label = op.operator?.trim() || ''
+      const sheet = op.sourceSheet?.trim() || label
+      return {
+        id: `${label}__${sheet}`,
+        label,
+        sheet
+      }
+    }).filter(s => s.label && s.sheet)
+    shipsList.value = normalized.length ? normalized : normalizeConfigShips(SHIPS_CONFIG)
+  } catch (e) {
+    console.warn('Failed to load operators:', e)
+    shipsList.value = normalizeConfigShips(SHIPS_CONFIG)
+  } finally {
+    shipsLoading.value = false
+  }
+}
+
+function lockPageScroll() {
+  const body = document.body
+  const html = document.documentElement
+  if (!body || !html) return
+
+  const scrollBarWidth = window.innerWidth - html.clientWidth
+  originalScrollStyles.bodyOverflow = body.style.overflow
+  originalScrollStyles.htmlOverflow = html.style.overflow
+  originalScrollStyles.bodyPadding = body.style.paddingRight
+  originalScrollStyles.htmlPadding = html.style.paddingRight
+
+  if (scrollBarWidth > 0) {
+    const pad = `${scrollBarWidth}px`
+    body.style.paddingRight = pad
+    html.style.paddingRight = pad
+  }
+  body.style.overflow = 'hidden'
+  html.style.overflow = 'hidden'
+}
+
+function restorePageScroll() {
+  const body = document.body
+  const html = document.documentElement
+  if (!body || !html) return
+
+  body.style.overflow = originalScrollStyles.bodyOverflow
+  html.style.overflow = originalScrollStyles.htmlOverflow
+  body.style.paddingRight = originalScrollStyles.bodyPadding
+  html.style.paddingRight = originalScrollStyles.htmlPadding
+}
+
+function normalizeConfigShips(list) {
+  return Array.isArray(list)
+    ? list.map(s => {
+        const label = s.label?.trim() || ''
+        const sheet = s.sheet?.trim() || label
+        return {
+          id: s.id || `${label}__${sheet}`,
+          label,
+          sheet
+        }
+      }).filter(s => s.label && s.sheet)
+    : []
 }
 
 function inc(which) {
@@ -409,30 +493,12 @@ function selectDate(day) {
   if (day.isSelectable) {
     dateFrom.value = day.fullDate
     // For trips, we can automatically set end date (e.g., 3 days later)
-    const endDate = new Date(day.fullDate)
-    endDate.setDate(endDate.getDate() + 3) // 3-day trip example
-    dateTo.value = endDate.toISOString().split('T')[0]
+    dateTo.value = addDaysToDateString(day.fullDate, 3)
   }
 }
 
 /** ===== API call ===== */
-async function fetchCabins() {
-  loading.value = true
-  error.value = ''
-  try {
-    const data = await getCabins()
-    cabinsData.value = data
-
-    // auto-pick region kalau cuma ada satu
-    if (!region.value && data.operators.length === 1) {
-      region.value = data.operators[0].operator
-    }
-  } catch (e) {
-    error.value = `Failed to load cabins: ${e instanceof Error ? e.message : String(e)}`
-  } finally {
-    loading.value = false
-  }
-}
+// Ships are loaded on mount via getCabins()
 </script>
 
 <style scoped>
@@ -457,38 +523,80 @@ async function fetchCabins() {
 }
 
 /* ===== MODAL HEADER/NAV - Independent ===== */
+:root {
+  /* Satu variabel buat padding horizontal halaman */
+  --page-pad: clamp(16px, 5vw, 40px);
+}
+
+/* Header */
 .modal-header {
-  background: white;
+  background: #fff;
+  border-bottom: 1px solid rgba(34, 63, 98, .15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
+  z-index: 10;
+  padding: .75rem 2rem;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid rgba(34,63,98,.15);
-  z-index: 10;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
+/* Konten header dengan padding yang proper */
+.modal-header-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+/* Title fleksibel (biar nggak nabrak tombol) */
 .modal-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--ocean-900);
   margin: 0;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--ocean-900);
+  font-family: var(--font-serif, serif);
+
+  flex: 1;
+  /* ambil ruang sisa */
+  min-width: 0;
+  /* aktifkan ellipsis */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Tombol Close tetap di kanan, tanpa trik ms-auto */
 .modal-close {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   cursor: pointer;
   color: var(--ocean-700);
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  transition: all 0.2s;
+  padding: .5rem .75rem;
+  margin-right: 30px;
+  border-radius: .25rem;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color .18s ease, opacity .18s ease;
+  opacity: .96; /* subtle base for smoother fade in/out */
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  white-space: nowrap;
 }
 
+
 .modal-close:hover {
-  background: rgba(34,63,98,.1);
+  background: transparent;
   color: var(--ocean-900);
+  opacity: .84; /* stronger but still subtle */
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* ===== MODAL BODY - Independent ===== */
@@ -506,7 +614,9 @@ async function fetchCabins() {
 
 .modal-body .plan-content {
   background: white;
-  padding: 2rem;
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
   padding-bottom: 4rem;
 }
 
@@ -517,11 +627,15 @@ async function fetchCabins() {
   bottom: 0;
   left: 0;
   right: 0;
-  border-top: 1px solid rgba(34,63,98,.08);
-  padding: 1rem 0;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  width: 100%;
+  border-top: 1px solid rgba(34, 63, 98, .08);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
   z-index: 20;
   backdrop-filter: blur(6px);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .modal-body .bottom-bar .nav-inner {
@@ -529,9 +643,7 @@ async function fetchCabins() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  width: 100%;
 }
 
 /* Override plan.css backgrounds for modal */

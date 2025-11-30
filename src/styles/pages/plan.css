@@ -1,5 +1,6 @@
 /* Plan page styles only */
 
+
 .plan-page { padding-bottom: 84px; }
 .plan-wrap { background: var(--bg-primary, #f4f1ec); }
 .plan-content { max-width: 750px; margin: 0 auto; padding: 2.5rem var(--edge-pad); }
@@ -18,16 +19,24 @@
 .radio:checked { border-color: var(--ocean-900); }
 .radio:checked::after { content:''; position:absolute; inset:4px; background: var(--ocean-900); border-radius:999px; }
 
+/* Circular checklist with checkmark (for multi-select) */
+.check { width: 32px; height: 32px; border: 2px solid rgba(34,63,98,.45); border-radius: 999px; appearance: none; display:inline-block; position: relative; background:#fff; cursor:pointer; transition: transform .12s ease, border-color .12s ease, background-color .12s ease; }
+.check:active { transform: scale(0.92); }
+.check:checked { border-color: var(--ocean-900); background: var(--ocean-900); }
+.check:checked::after { content:'\2713'; position:absolute; left:50%; top:50%; transform: translate(-50%, -62%); color:#fff; font-size: 20px; line-height: 1; transition: transform .12s ease; }
+.check:not(:checked)::after { content:''; }
+.list-row:hover .check { border-color: var(--ocean-900); }
+
 
 .date-inline { display:flex; align-items:center; gap:1rem; margin-top:1rem; }
 .date-arrow { color: var(--ocean-80a); }
-.date-inline .input { width: 220px; }
+.date-inline .input { width: 350px; }
 .calendar-box { margin-top:1.25rem; border: 1px solid var(--ocean-15a); border-radius:.75rem; padding: 2rem; color: var(--ocean-70a); text-align:center; min-height: 110px; }
 
 /* Date input section */
 .date-input-section { margin: 1rem 0; }
 .date-label { display: block; margin-bottom: 0.5rem; color: var(--ocean-900); font-weight: 500; }
-.date-input { width: 220px; }
+.date-input { width: 350px; }
 
 /* Custom Calendar */
 .custom-calendar { 
@@ -277,7 +286,81 @@
 .count { min-width: 1.5rem; text-align:center; color: var(--ocean-900); }
 
 .bottom-bar { position: fixed; bottom: 0; left: 0; right:0; background: rgba(244,241,236,.97); backdrop-filter: blur(6px); border-top: 1px solid rgba(34,63,98,.08); padding: .75rem 0; box-shadow: 0 -8px 20px -14px rgba(34,63,98,.25); z-index: 20; }
-.link-muted { background:none; border:none; color: var(--ocean-70a); cursor:pointer; }
+.link-muted { background:none; border:none; color: var(--ocean-70a); cursor:pointer; text-decoration: none; text-underline-offset: 3px; transition: color .18s ease, opacity .18s ease; opacity: .96; }
+.link-muted:hover { text-decoration: underline; text-underline-offset: 3px; opacity: .84; }
+
+/* Select-like summary row used in Results sidebar */
+.select-summary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem .875rem;
+  background: #fff;
+  border: 1px solid var(--ocean-15a);
+  border-radius: .375rem;
+  cursor: pointer;
+  color: var(--ocean-900);
+}
+.select-summary:hover { background: rgba(34,63,98,.06); border-color: rgba(34,63,98,.3); }
+.select-summary[aria-disabled="true"] { cursor: default; opacity: .9; }
+.select-summary .caret { color: var(--ocean-70a); }
+
+/* Dropdown popover container/panel */
+.dropdown { position: relative; }
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--ocean-15a);
+  border-radius: .5rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.06);
+  z-index: 60;
+  padding: .75rem 1rem;
+  max-height: 340px;
+  overflow: auto;
+}
+.dropdown-panel .list-row { padding: .9rem 0; }
+.dropdown-panel .list-row { border-bottom: none; }
+.dropdown-panel .list-row:hover { background: rgba(34,63,98,.04); }
+
+/* Filled variant for copper summary (Lodges) */
+.select-summary.is-filled {
+  background: var(--ocean-900);
+  border-color: var(--ocean-900);
+  color: #fff;
+}
+.select-summary.is-filled .caret { color: #fff; }
+
+/* Group title and footer inside dropdown */
+.dropdown-group-title {
+  font-weight: 700;
+  color: #374151;
+  padding: .75rem .25rem;
+}
+.dropdown-footer {
+  margin-top: .25rem;
+  padding: .75rem 0;
+  border-top: 1px solid var(--ocean-15a);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--ocean-900);
+  font-weight: 600;
+  cursor: pointer;
+}
+.dropdown-footer:hover { color: var(--ocean-70a); }
+
+/* Copper check inside dropdown */
+.dropdown-panel .check { border-color: rgba(34,63,98,.45); }
+.dropdown-panel .check:checked { border-color: var(--ocean-900); background: var(--ocean-900); }
+
+/* Simple guests row */
+.simple-guests { display:flex; align-items:center; justify-content:space-between; padding: .5rem 0 1rem; }
+.simple-guests-label { font-weight:600; color: var(--ocean-900); }
+.simple-guests-ctrls { display:flex; align-items:center; gap:.75rem; }
 
 /* Additional utilities */
 .section-divider { border-top: 1px solid var(--ocean-15a); }
@@ -318,3 +401,13 @@
 .text-red-600 {
   color: #dc2626;
 }
+
+/* ===== Modal transition (fast and subtle) ===== */
+.modal-fade-enter-active, .modal-fade-leave-active { transition: opacity .18s ease; }
+.modal-fade-enter-from, .modal-fade-leave-to { opacity: 0; }
+
+/* Container subtle lift */
+.modal-overlay .modal-container { animation: modalLift .18s ease both; }
+.modal-fade-leave-active .modal-container { animation: modalDrop .16s ease both; }
+@keyframes modalLift { from { transform: translateY(6px); } to { transform: translateY(0); } }
+@keyframes modalDrop { from { transform: translateY(0); } to { transform: translateY(6px); } }

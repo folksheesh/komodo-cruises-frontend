@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "../styles/plan-trip.css";
 
+
 const regionsData = [
   {
     country: "Nusa Tenggara Timur",
@@ -21,6 +22,11 @@ const lodgesData = {
   ],
 };
 
+
+// State untuk data operator dari API
+import { useEffect } from "react";
+
+
 export default function PlanTrip({ onClose }) {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
@@ -36,6 +42,31 @@ export default function PlanTrip({ onClose }) {
     children3to9: 0,
     children0to2: 0
   });
+  const [operators, setOperators] = useState([]);
+  const [operatorsLoading, setOperatorsLoading] = useState(true);
+  const [operatorsError, setOperatorsError] = useState("");
+
+  useEffect(() => {
+    setOperatorsLoading(true);
+    setOperatorsError("");
+    fetch("https://script.google.com/macros/s/AKfycbwvfIHPdbGq7cVlbX6g1IPoBdE2xIqYD9fZJclMlq9AYAFGa--e3eGV15HbYfrj2z4vLw/exec?resource=operators")
+      .then(res => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.operators) {
+          setOperators(data.operators);
+        } else {
+          setOperators([]);
+        }
+        setOperatorsLoading(false);
+      })
+      .catch(err => {
+        setOperatorsError("Failed to fetch operators from API.");
+        setOperatorsLoading(false);
+      });
+  }, []);
 
   const handleRegionChange = (region) => {
     setSelectedRegions(prev => 
@@ -91,11 +122,9 @@ export default function PlanTrip({ onClose }) {
             <p className="regions-subtitle">
               Select the regions you're interested in:
             </p>
-
             {regionsData.map((group, gi) => (
               <div key={group.country} className="region-group">
                 <div className="country">{group.country}</div>
-
                 {group.regions.length > 0 ? (
                   group.regions.map((r, ri) => {
                     const id = `region-${gi}-${ri}`;
@@ -118,7 +147,6 @@ export default function PlanTrip({ onClose }) {
                     <span className="region-name region-name--muted">—</span>
                   </div>
                 )}
-
                 <div className="divider" />
               </div>
             ))}
@@ -126,39 +154,38 @@ export default function PlanTrip({ onClose }) {
         )}
 
         {currentStep === 2 && (
-          <section className="lodges">
-            <h1 className="lodges-title">Lodges</h1>
-            <p className="lodges-subtitle">
-              These lodges are available in the regions you've selected.
+          <section className="ships">
+            <h1 className="ships-title">Operators</h1>
+            <p className="ships-subtitle">
+              Please select one or more operators:
             </p>
-            <p className="lodges-subtitle">
-              Please select the ones you're interested in:
-            </p>
-
-            {selectedRegions.map(region => (
-              <div key={region} className="region-group">
-                <div className="country">{region}</div>
-                
-                {lodgesData[region] && lodgesData[region].map((lodge, index) => {
-                  const id = `lodge-${region}-${index}`;
+            <div className="ships-list">
+              {operatorsLoading ? (
+                <div>Loading operators...</div>
+              ) : operatorsError ? (
+                <div style={{color: 'red'}}>{operatorsError}</div>
+              ) : operators.length === 0 ? (
+                <div>No operators found from API.</div>
+              ) : (
+                operators.map((op, opIdx) => {
+                  const id = `operator-${opIdx}`;
                   return (
-                    <label key={id} className="region-row" htmlFor={id}>
-                      <span className="region-name">{lodge}</span>
+                    <label key={id} className="operator-row" htmlFor={id} style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem'}}>
+                      <span className="operator-name" style={{fontWeight: 'bold'}}>{op.operator}</span>
+                      <span className="operator-source" style={{fontStyle: 'italic', color: '#888'}}>{op.sourceSheet}</span>
                       <input 
-                        type="checkbox" 
-                        id={id} 
+                        type="checkbox"
+                        id={id}
                         className="visually-hidden"
-                        checked={selectedLodges.includes(lodge)}
-                        onChange={() => handleLodgeChange(lodge)}
+                        // checked={selectedOperators && selectedOperators.includes(op.operator)}
+                        // onChange={() => handleOperatorChange(op.operator)}
                       />
                       <span className="custom-check" aria-hidden />
                     </label>
                   );
-                })}
-                
-                <div className="divider" />
-              </div>
-            ))}
+                })
+              )}
+            </div>
           </section>
         )}
 

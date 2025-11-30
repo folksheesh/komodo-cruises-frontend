@@ -63,8 +63,10 @@ body:has(.hero-section) .nav-overlay,
 }
 /* Results nav */
 .brand-text { font-family: var(--font-sans); font-weight: 700; font-size: 1.35rem; color: var(--ocean-900); }
-.back-link { color: #2b5279; text-decoration: none; font-weight: 600; }
-.back-link:hover { text-decoration: underline; }
+.back-link { color: #2b5279; text-decoration: none; font-weight: 600; text-underline-offset: 3px; transition: color .18s ease, opacity .18s ease; opacity: .96; }
+.back-link:hover { text-decoration: underline; text-underline-offset: 3px; opacity: .84; }
+.link-close { color: var(--ocean-700); text-decoration: none; font-weight: 600; background: transparent; border: none; text-underline-offset: 3px; transition: color .18s ease, opacity .18s ease; opacity: .96; }
+.link-close:hover { text-decoration: underline; text-underline-offset: 3px; opacity: .84; }
 .btn-plan {
   background: #c99b7b;
   color: #fff;
