@@ -419,7 +419,7 @@
             
             <div v-if="itineraryTotals.hasPrice" class="itinerary-total">
               <div class="itinerary-total-row">
-                <span class="itinerary-total-label">Estimated total (per night)</span>
+                <span class="itinerary-total-label">Estimated total (per night, all guests)</span>
                 <span class="itinerary-total-amount">{{ itineraryTotals.formattedTotal }}</span>
               </div>
               <p class="itinerary-total-note">
@@ -636,23 +636,23 @@
               <div class="form-row">
                 <div class="form-group form-group-small">
                   <label class="form-label">Title</label>
-                  <select class="form-control">
+                  <select class="form-control" v-model="enquiryForm.title">
                     <option value="">Select</option>
-                    <option value="mr">Mr</option>
-                    <option value="mrs">Mrs</option>
-                    <option value="ms">Ms</option>
-                    <option value="dr">Dr</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Ms">Ms</option>
+                    <option value="Dr">Dr</option>
                   </select>
                 </div>
                 
                 <div class="form-group">
                   <label class="form-label">First Name</label>
-                  <input type="text" class="form-control" required />
+                  <input type="text" class="form-control" v-model="enquiryForm.firstName" required />
                 </div>
                 
                 <div class="form-group">
                   <label class="form-label">Last Name</label>
-                  <input type="text" class="form-control" required />
+                  <input type="text" class="form-control" v-model="enquiryForm.lastName" required />
                 </div>
               </div>
               
@@ -660,23 +660,28 @@
                 <div class="form-group">
                   <label class="form-label">Contact Number</label>
                   <div class="phone-input">
-                    <select class="phone-country">
-                      <option value="+1">ðŸ‡ºðŸ‡¸ +1</option>
-                      <option value="+62">ðŸ‡®ðŸ‡© +62</option>
-                      <option value="+44">ðŸ‡¬ðŸ‡§ +44</option>
+                    <select class="phone-country" v-model="enquiryForm.phoneCountry">
+                      <option value="+62">🇮🇩 +62</option>
+                      <option value="+1">🇺🇸 +1</option>
+                      <option value="+44">🇬🇧 +44</option>
+                      <option value="+61">🇦🇺 +61</option>
+                      <option value="+65">🇸🇬 +65</option>
+                      <option value="+60">🇲🇾 +60</option>
                     </select>
-                    <input type="tel" class="form-control" placeholder="+1" />
+                    <input type="tel" class="form-control" v-model="enquiryForm.phoneNumber" placeholder="812345678" />
                   </div>
                 </div>
                 
                 <div class="form-group">
                   <label class="form-label">Country</label>
-                  <select class="form-control">
+                  <select class="form-control" v-model="enquiryForm.country">
                     <option value="">Select Country</option>
-                    <option value="us">United States</option>
-                    <option value="id">Indonesia</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="au">Australia</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="United States">United States</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="Malaysia">Malaysia</option>
                   </select>
                 </div>
               </div>
@@ -684,18 +689,18 @@
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label">Email</label>
-                  <input type="email" class="form-control" required />
+                  <input type="email" class="form-control" v-model="enquiryForm.email" required />
                 </div>
                 
                 <div class="form-group">
                   <label class="form-label">Confirm Email Address</label>
-                  <input type="email" class="form-control" required />
+                  <input type="email" class="form-control" v-model="enquiryForm.confirmEmail" required />
                 </div>
               </div>
               
               <div class="form-group">
                 <label class="form-label">I am a:</label>
-                <select class="form-control">
+                <select class="form-control" v-model="enquiryForm.userType">
                   <option value="">Select</option>
                   <option value="guest">Guest</option>
                   <option value="agent">Travel Agent</option>
@@ -704,17 +709,17 @@
               
               <div class="form-group">
                 <label class="form-label">Is there anything else you'd like to let us know?</label>
-                <textarea class="form-control form-textarea" rows="4"></textarea>
+                <textarea class="form-control form-textarea" rows="4" v-model="enquiryForm.notes"></textarea>
               </div>
               
               <div class="form-checkboxes">
                 <label class="checkbox-label">
-                  <input type="checkbox" />
+                  <input type="checkbox" v-model="enquiryForm.subscribeNews" />
                   <span>Sign up to receive news and blog posts from Singita</span>
                 </label>
                 
                 <label class="checkbox-label">
-                  <input type="checkbox" required />
+                  <input type="checkbox" v-model="enquiryForm.consentData" required />
                   <span>I consent to my submitted data being collected and stored</span>
                 </label>
               </div>
@@ -723,7 +728,9 @@
                 <strong>PLEASE NOTE:</strong> These results indicate availability and do not guarantee a booking. One of our Journey Designers will contact you shortly to plan your trip.
               </p>
               
-              <button type="submit" class="btn-submit-enquiry">SEND ENQUIRY</button>
+              <button type="submit" class="btn-submit-enquiry" :disabled="enquirySubmitting">
+                {{ enquirySubmitting ? 'PROCESSING...' : 'PROCEED TO PAYMENT' }}
+              </button>
               
               <p class="form-recaptcha">This form is protected by reCAPTCHA Enterprise and the Google Privacy Policy and Terms of Service apply.</p>
             </form>
@@ -733,7 +740,6 @@
           <div class="enquiry-summary-section">
             <h3 class="summary-title">Your Itinerary</h3>
             <p class="summary-description">This is a summary of the accommodation you've selected. One of our Singita Journey Designers will contact you shortly to plan your trip.</p>
-            
             <div class="summary-items">
               <div v-for="(item, index) in itineraryItems" :key="index" class="summary-item">
                 <div class="summary-item-header">
@@ -742,11 +748,35 @@
                 <div class="summary-item-details">
                   <p class="summary-cabin">{{ item.cabin }}</p>
                   <p class="summary-guests">{{ item.guests || 2 }} Guest{{ (item.guests || 2) > 1 ? 's' : '' }}</p>
-                  <p class="summary-price">{{ item.price }}</p>
                   <p class="summary-dates">{{ formatDate(item.date) }} → {{ formatDate(getEndDate(item.date)) }}</p>
+                </div>
+                <!-- Pricing Breakdown -->
+                <div v-if="item.price" class="summary-pricing">
+                  <div class="pricing-row">
+                    <span class="pricing-label">Price per cabin</span>
+                    <span class="pricing-value">{{ item.price }}</span>
+                  </div>
+                  <div class="pricing-row">
+                    <span class="pricing-label">× {{ item.guests || 2 }} guest{{ (item.guests || 2) > 1 ? 's' : '' }}</span>
+                    <span class="pricing-value">{{ formatItemSubtotal(item) }}</span>
+                  </div>
                 </div>
               </div>
             </div>
+            
+            <!-- Total Section with divider -->
+            <div v-if="itineraryTotals.hasPrice" class="enquiry-total-section">
+              <div class="enquiry-total-divider"></div>
+              <div class="enquiry-total">
+                <div class="enquiry-total-row">
+                  <span class="enquiry-total-label">Total Price</span>
+                  <span class="enquiry-total-amount">{{ itineraryTotals.formattedTotal }}</span>
+                </div>
+              </div>
+            </div>
+            <p v-else-if="itineraryItems.length" class="enquiry-pricing-note">
+              Pricing for the selected cabins will be confirmed by our Journey Designers.
+            </p>
           </div>
         </div>
       </div>
@@ -758,6 +788,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { getAvailability, getCabins, getOperators } from '../services/komodoApi'
 import { generateDateRange, addDaysToDateString, getTodayString, formatDateToString } from '../utils/dateUtils'
+import { createXenditInvoice, redirectToPayment, parsePriceToNumber } from '../services/xenditService'
 import '../styles/pages/results.css'
 import '../styles/pages/plan.css'
 
@@ -782,6 +813,7 @@ const selectedCabin = ref(null)
 const cabinQuantity = ref(1)
 // Enquiry modal
 const showEnquiryModal = ref(false)
+const enquirySubmitting = ref(false)
 // Guest selection modal
 const showGuestModal = ref(false)
 const pendingItineraryItem = ref(null)
@@ -1597,6 +1629,16 @@ function formatTotalAmount(amount, currency = DEFAULT_CURRENCY) {
   return `${label} ${Math.round(amount).toLocaleString('en-US')}`
 }
 
+// Format subtotal for individual itinerary item (price × guests)
+function formatItemSubtotal(item) {
+  if (!item?.price) return ''
+  const parsed = parsePriceValue(item.price, DEFAULT_CURRENCY)
+  if (!parsed) return ''
+  const guests = Number(item?.guests || 2)
+  const subtotal = parsed.amount * (Number.isFinite(guests) ? guests : 2)
+  return formatTotalAmount(subtotal, parsed.currency)
+}
+
 const itineraryTotals = computed(() => {
   const items = itineraryItems.value || []
   if (!items.length) {
@@ -1619,7 +1661,10 @@ const itineraryTotals = computed(() => {
       skipped++
       continue
     }
-    total += parsed.amount
+    // Multiply price-per-pax by number of guests for the item
+    const guests = Number(item?.guests || 2)
+    const itemTotal = Number(parsed.amount) * (Number.isFinite(guests) ? guests : 2)
+    total += itemTotal
     pricedCount++
   }
   const hasPrice = pricedCount > 0
@@ -1836,6 +1881,119 @@ function restorePageScroll() {
   html.style.overflow = scrollLockState.htmlOverflow
   body.style.paddingRight = scrollLockState.bodyPadding
   html.style.paddingRight = scrollLockState.htmlPadding
+}
+
+// Enquiry Form State
+const enquiryForm = ref({
+  title: '',
+  firstName: '',
+  lastName: '',
+  phoneCountry: '+62',
+  phoneNumber: '',
+  country: '',
+  email: '',
+  confirmEmail: '',
+  userType: '',
+  notes: '',
+  subscribeNews: false,
+  consentData: false
+})
+
+// Submit enquiry and redirect to Xendit payment
+async function submitEnquiry() {
+  // Validate form
+  if (!enquiryForm.value.firstName || !enquiryForm.value.lastName) {
+    alert('Please enter your first and last name')
+    return
+  }
+  
+  if (!enquiryForm.value.email || enquiryForm.value.email !== enquiryForm.value.confirmEmail) {
+    alert('Please ensure email addresses match')
+    return
+  }
+  
+  if (!enquiryForm.value.consentData) {
+    alert('Please consent to data collection to proceed')
+    return
+  }
+  
+  if (!itineraryItems.value.length) {
+    alert('Please add at least one cabin to your itinerary')
+    return
+  }
+
+  // Calculate total amount
+  let totalAmount = 0
+  const items = []
+  
+  for (const item of itineraryItems.value) {
+    const priceNum = parsePriceToNumber(item.price)
+    const guests = Number(item.guests || 2)
+    const itemTotal = priceNum * guests
+    totalAmount += itemTotal
+    
+    items.push({
+      name: `${item.ship} - ${item.cabin}`,
+      quantity: guests,
+      price: priceNum,
+      category: 'Cruise Cabin'
+    })
+  }
+
+  // If no valid price found, set a minimum or show error
+  if (totalAmount <= 0) {
+    // Use a default amount for testing (Rp 1,000,000)
+    totalAmount = 1000000
+    items.push({
+      name: 'Komodo Cruise Booking',
+      quantity: 1,
+      price: totalAmount,
+      category: 'Cruise Booking'
+    })
+  }
+
+  enquirySubmitting.value = true
+
+  try {
+    // Build description
+    const cabinNames = itineraryItems.value.map(it => `${it.ship} - ${it.cabin}`).join(', ')
+    const description = `Komodo Cruise Booking: ${cabinNames}`
+
+    // Create Xendit invoice
+    const invoiceResponse = await createXenditInvoice({
+      amount: totalAmount,
+      payerEmail: enquiryForm.value.email,
+      description: description,
+      customerName: `${enquiryForm.value.title ? enquiryForm.value.title + ' ' : ''}${enquiryForm.value.firstName} ${enquiryForm.value.lastName}`,
+      customerPhone: enquiryForm.value.phoneCountry + enquiryForm.value.phoneNumber,
+      items: items
+    })
+
+    console.log('Invoice created:', invoiceResponse)
+
+    // Save enquiry data to localStorage for reference
+    localStorage.setItem('komodo_last_enquiry', JSON.stringify({
+      form: enquiryForm.value,
+      itinerary: itineraryItems.value,
+      invoiceId: invoiceResponse.invoiceId,
+      invoiceUrl: invoiceResponse.invoiceUrl,
+      amount: totalAmount,
+      createdAt: new Date().toISOString()
+    }))
+
+    // Redirect to Xendit payment page
+    if (invoiceResponse.invoiceUrl) {
+      redirectToPayment(invoiceResponse.invoiceUrl)
+    } else {
+      throw new Error('No invoice URL received')
+    }
+
+  } catch (err) {
+    console.error('Failed to create payment:', err)
+    alert(`Failed to process payment: ${err.message}. Please try again.`)
+  } finally {
+    enquirySubmitting.value = false
+  }
 }
 
 // initial load
