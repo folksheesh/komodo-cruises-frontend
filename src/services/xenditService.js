@@ -1,5 +1,5 @@
 // Xendit Payment Service
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://komodo-cruises-production-0c52.up.railway.app';
 
 /**
  * Create a Xendit invoice for payment

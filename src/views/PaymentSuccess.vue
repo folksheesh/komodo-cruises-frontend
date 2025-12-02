@@ -225,7 +225,7 @@ const sendConfirmationEmail = async () => {
   try {
     emailStatus.value = 'sending'
     
-    const response = await fetch('http://localhost:3001/api/send-confirmation-email', {
+    const response = await fetch('https://komodo-cruises-production-0c52.up.railway.app/api/send-confirmation-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
