@@ -16,7 +16,7 @@ const XENDIT_AUTH = Buffer.from(XENDIT_SECRET_KEY + ':').toString('base64');
 // 1. Aktifkan 2-Factor Authentication di akun Gmail
 // 2. Buat App Password di https://myaccount.google.com/apppasswords
 const EMAIL_USER = process.env.EMAIL_USER || 'zenalaydrusss@gmail.com';
-const EMAIL_PASS = process.env.EMAIL_PASS || 'avnt xrak xkll dlho';
+const EMAIL_PASS = process.env.EMAIL_PASS || 'ykry gyas ciii oigu';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
