@@ -405,7 +405,7 @@ app.post('/api/send-confirmation-email', async (req, res) => {
     console.log('Sending confirmation email to:', data.customerEmail);
 
     const response = await resend.emails.send({
-      from: 'Komodo Cruises <onboarding@resend.dev>', // gunakan domain default Resend untuk testing
+      from: 'Komodo Cruises <booking@onresend.com>', // gunakan domain onresend.com untuk testing
       to: data.customerEmail,
       subject: `✅ Booking Confirmed - ${data.bookingId} | Komodo Cruises`,
       html: generateEmailHTML(data)
