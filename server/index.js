@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
+const resend = new Resend('re_aXUBChgw_441CLpJctCFcLtbNeg5rTHty');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,13 +19,7 @@ const XENDIT_AUTH = Buffer.from(XENDIT_SECRET_KEY + ':').toString('base64');
 const EMAIL_USER = process.env.EMAIL_USER || 'zenalaydrusss@gmail.com';
 const EMAIL_PASS = process.env.EMAIL_PASS || 'ykry gyas ciii oigu';
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS
-  }
-});
+// Nodemailer dihapus, diganti dengan Resend
 
 // Middleware
 app.use(cors());
@@ -409,18 +404,15 @@ app.post('/api/send-confirmation-email', async (req, res) => {
     const data = req.body;
     console.log('Sending confirmation email to:', data.customerEmail);
 
-    const mailOptions = {
-      from: `"Komodo Cruises" <${EMAIL_USER}>`,
+    const response = await resend.emails.send({
+      from: 'Komodo Cruises <onboarding@resend.dev>', // gunakan domain default Resend untuk testing
       to: data.customerEmail,
       subject: `✅ Booking Confirmed - ${data.bookingId} | Komodo Cruises`,
       html: generateEmailHTML(data)
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-    
-    console.log('Email sent successfully to:', data.customerEmail);
-    res.json({ success: true, message: 'Email sent successfully' });
-
+    console.log('Email sent via Resend:', response);
+    res.json({ success: true, message: 'Email sent successfully', id: response.id });
   } catch (error) {
     console.error('Error sending email:', error);
     res.status(500).json({
