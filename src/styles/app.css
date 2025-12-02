@@ -133,3 +133,67 @@ body:has(.hero-section) .btn-plan,
 .site-footer { background: var(--ocean-900); color: #fff; }
 .footer-inner { padding: 1.5rem var(--edge-pad); }
 
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+  :root {
+    --edge-pad: 16px;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .nav-inner {
+    padding: 1rem var(--edge-pad);
+  }
+  
+  .logo-singita {
+    font-size: 1.6rem;
+    margin-right: 1rem;
+  }
+  
+  .nav-right {
+    gap: 0.75rem;
+  }
+  
+  .btn-plan {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+  }
+  
+  .nav-label {
+    display: none;
+  }
+  
+  .nav-menu {
+    margin-left: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-inner {
+    padding: 0.75rem 0.75rem;
+  }
+  
+  .logo-singita {
+    font-size: 1.4rem;
+    margin-right: 0.5rem;
+  }
+  
+  .btn-plan {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    margin-right: 0;
+  }
+  
+  .nav-search svg,
+  .nav-menu svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .brand-text {
+    font-size: 1.1rem;
+  }
+}

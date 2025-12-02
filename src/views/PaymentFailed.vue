@@ -150,4 +150,49 @@
 .btn-secondary:hover {
   background: #e5e7eb;
 }
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .payment-result-page {
+    padding: 1rem;
+  }
+  
+  .payment-result-container {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+  
+  .result-icon {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .result-icon svg {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .result-title {
+    font-size: 1.5rem;
+  }
+  
+  .result-message {
+    font-size: 1rem;
+  }
+  
+  .result-details {
+    padding: 1rem;
+  }
+  
+  .result-actions {
+    flex-direction: column;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+  }
+}
 </style>

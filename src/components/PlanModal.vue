@@ -656,4 +656,55 @@ function selectDate(day) {
 .modal-body .bottom-bar {
   margin-top: 0 !important;
 }
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .modal-header {
+    padding: 0.5rem 1rem;
+  }
+  
+  .modal-header-content {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .modal-title {
+    font-size: 1.1rem;
+  }
+  
+  .modal-close {
+    padding: 0.4rem 0.5rem;
+    margin-right: 0;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-header {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .modal-title {
+    font-size: 1rem;
+  }
+  
+  .modal-close {
+    padding: 0.35rem 0.4rem;
+    font-size: 0.9rem;
+  }
+  
+  .modal-body .plan-content {
+    padding: 1.5rem 1rem;
+    padding-bottom: 5rem;
+  }
+  
+  .modal-body .bottom-bar {
+    padding: 0.75rem 1rem;
+  }
+  
+  .modal-body .bottom-bar .nav-inner {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
 </style>
