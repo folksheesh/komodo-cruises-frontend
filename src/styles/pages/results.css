@@ -584,41 +584,46 @@
   gap: 1.5rem;
 }
 
-/* Mobile Sidebar - Sticky bottom on mobile */
+/* Mobile Sidebar - Move below cabin cards */
 @media (max-width: 768px) {
-  .sidebar-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    z-index: 100;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
-    padding: 1rem;
-    gap: 0.75rem;
-    max-height: 60vh;
-    overflow-y: auto;
-    border-radius: 16px 16px 0 0;
-    transform: translateY(calc(100% - 70px));
-    transition: transform 0.3s ease;
-  }
-  
-  .sidebar-container.expanded {
-    transform: translateY(0);
-  }
-  
-  .sidebar-container::before {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 4px;
-    background: #d1d5db;
-    border-radius: 2px;
-    margin: 0 auto 0.75rem;
+  .results-layout {
+    display: flex;
+    flex-direction: column;
   }
   
   .results-main {
-    padding-bottom: 80px;
+    order: 1;
+  }
+  
+  .sidebar-container {
+    order: 2;
+    position: relative;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin-top: 1.5rem;
+    max-height: none;
+    overflow: visible;
+    border-radius: 0;
+    transform: none;
+  }
+  
+  .itinerary-sidebar,
+  .check-availability-section {
+    padding: 1.25rem;
+    border-radius: 8px;
+  }
+  
+  .itinerary-title,
+  .section-title-sidebar {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar-container {
+    margin-top: 1rem;
+    gap: 1rem;
   }
   
   .itinerary-sidebar,
@@ -629,17 +634,6 @@
   .itinerary-title,
   .section-title-sidebar {
     font-size: 1.25rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .sidebar-container {
-    padding: 0.75rem;
-  }
-  
-  .itinerary-sidebar,
-  .check-availability-section {
-    padding: 0.75rem;
   }
 }
 
@@ -1229,6 +1223,57 @@
   .modal-content .modal-body {
     grid-template-columns: 1fr;
   }
+  
+  .modal-content {
+    max-height: 100vh;
+    height: 100%;
+    border-radius: 0;
+  }
+  
+  .modal-image-section {
+    order: 1;
+  }
+  
+  .modal-info-section {
+    order: 2;
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+  
+  .modal-cabin-image {
+    min-height: 250px;
+    max-height: 300px;
+  }
+  
+  .modal-gallery-nav {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-close {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+  
+  .modal-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .modal-cabin-image {
+    min-height: 200px;
+    max-height: 250px;
+  }
+  
+  .modal-info-section {
+    padding: 1rem;
+  }
 }
 
 .modal-image-section {
@@ -1576,6 +1621,67 @@
 @media (max-width: 968px) {
   .enquiry-modal-body {
     grid-template-columns: 1fr;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .enquiry-form-section {
+    order: 1;
+    flex-shrink: 0;
+  }
+  
+  .enquiry-summary-section {
+    order: 2;
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    position: relative;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .enquiry-modal-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .enquiry-modal-title {
+    font-size: 1.1rem;
+    margin-left: 0;
+  }
+  
+  .enquiry-modal-close {
+    margin-right: 0;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .enquiry-form-section {
+    padding: 1.25rem 1rem;
+  }
+  
+  .enquiry-summary-section {
+    padding: 1.25rem 1rem;
+  }
+  
+  .enquiry-intro {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .enquiry-form {
+    gap: 1rem;
+  }
+  
+  .summary-title {
+    font-size: 1.25rem;
+  }
+  
+  .summary-description {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -1583,6 +1689,19 @@
   padding: 2.5rem 3rem;
   background: white;
   overflow-y: auto;
+}
+
+@media (max-width: 968px) {
+  .enquiry-form-section {
+    padding: 1.5rem 1rem;
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .enquiry-form-section {
+    padding: 1rem;
+  }
 }
 
 .enquiry-intro {
@@ -1607,6 +1726,24 @@
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .form-group {
+    gap: 0.35rem;
+  }
+  
+  .form-label {
+    font-size: 0.85rem;
+  }
+  
+  .form-control {
+    padding: 0.65rem;
+    font-size: 0.85rem;
+  }
+  
+  .phone-input {
+    grid-template-columns: 90px 1fr;
   }
 }
 
@@ -1741,6 +1878,20 @@
   padding: 2.5rem 2rem;
   border-left: 1px solid #e5e7eb;
   overflow-y: auto;
+}
+
+@media (max-width: 968px) {
+  .enquiry-summary-section {
+    padding: 1.5rem 1rem;
+    border-left: none;
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .enquiry-summary-section {
+    padding: 1rem;
+  }
 }
 
 .summary-title {
