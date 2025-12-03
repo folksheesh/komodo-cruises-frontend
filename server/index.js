@@ -3,7 +3,7 @@ const cors = require('cors');
 const { Resend } = require('resend');
 // Read Resend API key and sender address from environment for security
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM || 'booking@komodocruises.com';
+const EMAIL_FROM = process.env.EMAIL_FROM || 'booking@komodocruises.com' || 'zenalaydrusss@gmail.com';
 
 if (!RESEND_API_KEY) {
   console.warn('⚠️  RESEND_API_KEY is not set. Email sending will fail until you set it in the environment.');
