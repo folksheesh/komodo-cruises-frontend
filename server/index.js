@@ -1,7 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const { Resend } = require('resend');
-const resend = new Resend('re_aXUBChgw_441CLpJctCFcLtbNeg5rTHty');
+// Read Resend API key and sender address from environment for security
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const EMAIL_FROM = process.env.EMAIL_FROM || 'booking@komodocruises.com';
+
+if (!RESEND_API_KEY) {
+  console.warn('⚠️  RESEND_API_KEY is not set. Email sending will fail until you set it in the environment.');
+}
+
+const resend = new Resend(RESEND_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -401,24 +409,45 @@ function generateEmailHTML(data) {
 // Send confirmation email endpoint
 app.post('/api/send-confirmation-email', async (req, res) => {
   try {
-    const data = req.body;
+    const data = req.body || {};
+
+    // Basic validation
+    if (!data.customerEmail) {
+      return res.status(400).json({ success: false, message: 'Missing required field: customerEmail' });
+    }
+
     console.log('Sending confirmation email to:', data.customerEmail);
 
+    // Ensure API key present
+    if (!RESEND_API_KEY) {
+      console.error('RESEND_API_KEY is not configured in the environment.');
+      return res.status(500).json({ success: false, message: 'Email provider not configured' });
+    }
+
     const response = await resend.emails.send({
-      from: 'Komodo Cruises <booking@onresend.com>', // gunakan domain onresend.com untuk testing
+      from: EMAIL_FROM,
       to: data.customerEmail,
-      subject: `✅ Booking Confirmed - ${data.bookingId} | Komodo Cruises`,
+      subject: `✅ Booking Confirmed - ${data.bookingId || ''} | Komodo Cruises`,
       html: generateEmailHTML(data)
     });
 
-    console.log('Email sent via Resend:', response);
-    res.json({ success: true, message: 'Email sent successfully', id: response.id });
+    // Resend SDK may return different shapes; try to extract an id safely
+    const sentId = response && (response.id || (response.data && response.data.id));
+
+    console.log('Resend response:', response);
+
+    return res.json({ success: true, message: 'Email sent successfully', id: sentId || null, raw: response });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({
+
+    // If Resend returned a structured error, try to forward useful info
+    const errMsg = error && (error.message || (error.error && error.error.message)) || 'Unknown error';
+
+    return res.status(500).json({
       success: false,
       message: 'Failed to send email',
-      error: error.message
+      error: errMsg,
+      details: error
     });
   }
 });
